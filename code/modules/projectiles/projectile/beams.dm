@@ -237,11 +237,16 @@
 	impact_type = /obj/effect/projectile/trilaser/impact
 
 /obj/item/projectile/beam/deadspaceplasmacutter/on_impact(var/atom/A)
+	. = ..()
 	if(istype(A, /turf/simulated/mineral))
 		var/turf/simulated/mineral/M = A
-		if(prob(33))
-			M.GetDrilled(1)
+		M.GetDrilled(1)
+		visible_message("<span class='warning'>\The [M] is destroyed by \the [src]!</span>")
+		return 0
+	else if(istype(A, /turf/simulated/wall))
+		var/turf/simulated/wall/W = A
+		if(!isnull(W.construction_stage) && W.reinf_material)
 			return
-		else
-			M.emitter_blasts_taken += 2
-	. = ..()
+		W.dismantle_wall()
+		visible_message("<span class='warning'>\The [src] destroys the outer hull of \the [W]!</span>")
+		return 0

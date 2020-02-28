@@ -31,7 +31,7 @@
 		return 1
 	if(!T0 || T0.z != z)
 		return 0
-	if(get_dist(src,T0) > 1)
+	if(get_dist(src, T0) > 1)
 		return 0
 
 	if(T0.x == x || T0.y == y)
@@ -86,6 +86,8 @@ Quick adjacency (to turf):
 	for(var/turf/T in locs)
 		if(isnull(T)) continue
 		if(T.Adjacent(neighbor,src)) return 1
+	var/turf/T = loc
+	if(T.Adjacent(neighbor, src)) return 1
 	return 0
 
 // This is necessary for storage items not on your person.

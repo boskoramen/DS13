@@ -136,7 +136,8 @@
 		return
 
 	//get the user's location
-	if(!istype(user.loc, /turf))	return	//can't do this stuff whilst inside objects and such
+	if(!istype(user.loc, /turf))
+		return	//can't do this stuff whilst inside objects and such
 
 	if(W)
 		radiate()
@@ -197,40 +198,42 @@
 
 		if(isWelder(W))
 			cut_delay *= 0.7
-		else if(istype(W,/obj/item/weapon/melee/energy/blade))
+		else if(istype(W, /obj/item/weapon/melee/energy/blade))
 			dismantle_sound = "sparks"
 			dismantle_verb = "slicing"
 			cut_delay *= 0.5
-		else if(istype(W,/obj/item/weapon/pickaxe))
+		else if(istype(W, /obj/item/weapon/pickaxe))
+			DEBUG_MSG("<b>[W] is a pickaxe</b>")
 			req_quality = QUALITY_DIGGING
 			var/obj/item/weapon/pickaxe/P = W
 			dismantle_verb = P.drill_verb
 			dismantle_sound = P.drill_sound
 			cut_delay -= P.digspeed
+		else
+			DEBUG_MSG("<b>[W] IS NOT A PICKAXE</b>")
 
 		if(dismantle_verb)
-
 			to_chat(user, "<span class='notice'>You begin [dismantle_verb] through the outer plating.</span>")
-			if(dismantle_sound)
-				playsound(src, dismantle_sound, 100, 1)
+		if(dismantle_sound)
+			playsound(src, dismantle_sound, 100, 1)
 
-			if(cut_delay<0)
-				cut_delay = 0
+		if(cut_delay<0)
+			cut_delay = 0
 
-			if(!W.use_tool(user, src, WORKTIME_NORMAL+cut_delay, req_quality, FAILCHANCE_NORMAL))
-				return
-
-			to_chat(user, "<span class='notice'>You remove the outer plating.</span>")
-			dismantle_wall()
-			user.visible_message("<span class='warning'>\The [src] was torn open by [user]!</span>")
+		if(!W.use_tool(user, src, WORKTIME_NORMAL+cut_delay, req_quality, FAILCHANCE_NORMAL))
 			return
+
+		to_chat(user, "<span class='notice'>You remove the outer plating.</span>")
+		dismantle_wall()
+		user.visible_message("<span class='warning'>\The [src] was torn open by [user]!</span>")
+		return
 
 	//Reinforced dismantling.
 	else
 		switch(construction_stage)
 			if(6)
-				to_chat(user, "<span class='notice'>You begin cutting the outer grille.</span>")
 				if(isWirecutter(W) && W.use_tool(user, src, WORKTIME_VERY_SLOW, QUALITY_WIRE_CUTTING, FAILCHANCE_NORMAL))
+					to_chat(user, "<span class='notice'>You begin cutting the outer grille.</span>")
 					playsound(src, 'sound/items/Wirecutter.ogg', 100, 1)
 					construction_stage = 5
 					new /obj/item/stack/rods( src )
