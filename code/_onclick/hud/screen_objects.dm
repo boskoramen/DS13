@@ -69,7 +69,7 @@
 /obj/screen/storage
 	name = "storage"
 
-/obj/screen/storage/Click()
+/obj/screen/storage/Click(var/location, var/control, var/params)
 	if(!usr.canClick())
 		return 1
 	if(usr.stat || usr.paralysis || usr.stunned || usr.weakened)
@@ -79,7 +79,7 @@
 	if(master)
 		var/obj/item/I = usr.get_active_hand()
 		if(I)
-			usr.ClickOn(master)
+			usr.ClickOn(master, params)
 	return 1
 
 /obj/screen/zone_sel
